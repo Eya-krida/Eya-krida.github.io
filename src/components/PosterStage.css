@@ -1,0 +1,85 @@
+/* The three layers share the same grid cell */
+.ps-stage {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  place-items: center;
+  min-height: 0;
+}
+
+.ps-stage > .ps-word,
+.ps-stage > .ps-photo {
+  grid-area: 1 / 1;
+}
+
+.ps-word {
+  margin: 0;
+  font-family: "Anton", "Oswald", sans-serif;
+  font-weight: 400;
+  font-size: var(--ps-size, min(19.5vw, 38vh));
+  line-height: 0.82;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--ps-ink, currentColor);
+  user-select: none;
+  z-index: 1;
+}
+
+.ps-photo {
+  align-self: end;
+  height: var(--ps-photo-h, min(82vh, 110vw));
+  max-height: 100%;
+  width: auto;
+  max-width: none;
+  object-fit: contain;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Same word again, only its outline, drawn over the photo */
+.ps-word-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--ps-ink, currentColor);
+  z-index: 3;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ps-word {
+    animation: ps-rise 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  .ps-photo {
+    animation: ps-fade 1s ease 0.15s both;
+  }
+}
+
+@keyframes ps-rise {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes ps-fade {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Phone: the word fills the width and crosses her face */
+@media (max-width: 700px) {
+  .ps-stage {
+    min-height: var(--ps-phone-h, 64svh);
+  }
+  .ps-word {
+    font-size: 22vw;
+    align-self: end;
+    margin-bottom: var(--ps-phone-word-bottom, 68vw);
+  }
+  .ps-photo {
+    width: 100%;
+    height: auto;
+    max-height: var(--ps-phone-h, 64svh);
+    object-position: bottom;
+  }
+}

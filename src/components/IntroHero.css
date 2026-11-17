@@ -554,3 +554,123 @@
     padding: 12px 0;
   }
 }
+/* ===== "mixed" mode (site.intro = "mixed"): giant word + cut-out photo in the middle ===== */
+.ih-inner-mixed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0;
+  padding-top: 4px;
+  padding-bottom: 0;
+}
+
+.ih-inner-mixed .ps-stage {
+  --ps-ink: var(--dk-word, var(--ink));
+  --ps-size: min(17vw, 30vh);
+  --ps-photo-h: min(58vh, 90vw);
+  min-height: min(58vh, 90vw);
+  margin-top: 6px;
+}
+
+/* The 4 floating badges, around the photo */
+.ih-chips-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.ih-chips-layer .ih-chip-1 { left: 24%; top: 10%; }
+.ih-chips-layer .ih-chip-2 { right: 24%; top: 4%; }
+.ih-chips-layer .ih-chip-3 { right: 20%; top: auto; bottom: 16%; }
+.ih-chips-layer .ih-chip-4 { left: 20%; top: auto; bottom: 8%; }
+
+/* Rotating sentence + buttons under the poster */
+.ih-under {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin: 16px 0 22px;
+}
+
+.ih-under .ih-role {
+  margin: 0;
+  text-align: center;
+  font-size: clamp(15px, 1.3vw, 18px);
+}
+
+.ih-under .ih-actions {
+  margin-top: 0;
+}
+
+/* Own colors for the mixed mode (site.poster.themed = true) */
+.ih-section.is-themed {
+  --bg: var(--dk-bg);
+  --ink: var(--dk-ink);
+  --muted: color-mix(in srgb, var(--dk-ink) 72%, var(--dk-bg));
+  --soft: color-mix(in srgb, var(--dk-ink) 55%, var(--dk-bg));
+  --line: color-mix(in srgb, var(--dk-ink) 18%, transparent);
+  --accent: var(--dk-accent);
+  --accent-ink: var(--dk-accent-ink);
+  --accent-soft: color-mix(in srgb, var(--dk-accent) 30%, transparent);
+}
+
+.is-themed .ih-glow {
+  display: none;
+}
+
+.is-themed .ih-status,
+.is-themed .ih-btn-outline {
+  background: transparent;
+}
+
+.is-themed .ih-btn-outline {
+  border-color: var(--ink);
+}
+
+.is-themed .ih-btn-primary {
+  box-shadow: none;
+}
+
+.is-themed .ih-nav-cta,
+.is-themed .ih-nav-cta:hover,
+.is-themed .ih-menu .ih-menu-cta {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.is-themed .ih-menu-btn {
+  background: color-mix(in srgb, var(--ink) 12%, transparent);
+  color: var(--ink);
+  box-shadow: none;
+}
+
+.is-themed .ih-menu {
+  background: var(--bg);
+  border: 1px solid var(--line);
+}
+
+.is-themed .ih-chip {
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  border-color: var(--line);
+  color: var(--ink);
+  box-shadow: none;
+}
+
+@media (max-width: 900px) {
+  .ih-inner-mixed .ps-stage {
+    --ps-phone-h: 50svh;
+    --ps-phone-word-bottom: 62vw;
+  }
+  .ih-under {
+    margin: 14px 0 18px;
+  }
+  .ih-chips-layer .ih-chip-1 { left: 2%; top: 22%; }
+  .ih-chips-layer .ih-chip-2 { right: 2%; top: 14%; }
+  .ih-chips-layer .ih-chip-3 { right: 2%; bottom: 20%; }
+  .ih-chips-layer .ih-chip-4 { left: 2%; bottom: 8%; }
+}

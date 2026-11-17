@@ -70,7 +70,7 @@ export const contact = {
   github: "https://github.com/eya-krida",
   linkedin: "https://www.linkedin.com/in/eya-krida",
   location: "Tunis, Tunisia",
-  qrTarget: "https://github.com/eya-krida",
+  qrTarget: "https://eya-krida.github.io", // the QR code on her CV opens the site
 };
 
 export const services = [

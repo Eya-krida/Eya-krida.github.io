@@ -1,0 +1,182 @@
+.ph-section {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(18px, 3.5vw, 44px) clamp(20px, 5vw, 64px) clamp(18px, 3vw, 36px);
+  background: var(--ph-bg);
+  color: var(--ph-ink);
+  overflow: hidden;
+}
+
+.ph-small {
+  margin: 0;
+  font-size: clamp(12px, 1.1vw, 15px);
+  letter-spacing: 0.01em;
+}
+
+/* Top row */
+.ph-top {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ph-arrow {
+  display: flex;
+  color: var(--ph-ink);
+  transition: transform 0.2s ease;
+}
+
+.ph-arrow:hover {
+  transform: translateX(6px);
+}
+
+/* Word + photo, all three layers in the same grid cell */
+.ph-stage {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  place-items: center;
+  min-height: 0;
+}
+
+.ph-stage > * {
+  grid-area: 1 / 1;
+}
+
+.ph-word {
+  margin: 0;
+  font-family: "Anton", "Oswald", sans-serif;
+  font-weight: 400;
+  font-size: min(19.5vw, 38vh);
+  line-height: 0.82;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--ph-ink);
+  user-select: none;
+  z-index: 1;
+}
+
+.ph-photo {
+  align-self: end;
+  height: min(82vh, 110vw);
+  max-height: 100%;
+  width: auto;
+  max-width: none;
+  object-fit: contain;
+  margin-bottom: calc(-1 * clamp(18px, 3vw, 36px));
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Same word again, only its outline, drawn over the photo */
+.ph-word-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--ph-ink);
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* Bottom row */
+.ph-bottom {
+  position: relative;
+  z-index: 4;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 16px;
+}
+
+.ph-url {
+  text-align: right;
+}
+
+.ph-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.ph-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 22px;
+  border-radius: 999px;
+  border: 1.5px solid var(--ph-ink);
+  color: var(--ph-ink);
+  background: color-mix(in srgb, var(--ph-bg) 70%, transparent);
+  font-size: 14px;
+  text-decoration: none;
+  transition: transform 0.15s ease;
+}
+
+.ph-pill-fill {
+  background: var(--ph-ink);
+  color: var(--ph-bg);
+}
+
+.ph-pill:hover {
+  transform: translateY(-1px);
+}
+
+.ph-section a:focus-visible {
+  outline: 2px solid var(--ph-ink);
+  outline-offset: 3px;
+}
+
+/* Entrance on load */
+@media (prefers-reduced-motion: no-preference) {
+  .ph-word {
+    animation: ph-rise 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  .ph-photo {
+    animation: ph-fade 1s ease 0.15s both;
+  }
+}
+
+@keyframes ph-rise {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes ph-fade {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Phone: word fills the width, buttons above the name and the link */
+@media (max-width: 700px) {
+  .ph-stage {
+    min-height: 64svh;
+  }
+  .ph-word {
+    font-size: 22vw;
+    align-self: end;
+    margin-bottom: 68vw; /* crosses her face, like on desktop */
+  }
+  .ph-photo {
+    width: 100%;
+    height: auto;
+    max-height: 64svh;
+    object-position: bottom;
+    margin-bottom: 0;
+  }
+  .ph-bottom {
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 12px;
+    padding-top: 14px;
+  }
+  .ph-actions {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    justify-content: center;
+  }
+  .ph-pill {
+    padding: 9px 16px;
+    font-size: 13px;
+  }
+}

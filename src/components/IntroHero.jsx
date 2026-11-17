@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { ArrowRight, ArrowDown, Download, UserRound, Menu, X } from "lucide-react";
 import { site } from "../data/site";
+import PosterStage from "./PosterStage.jsx";
 import "./IntroHero.css";
 
 // Put a photo in /public/me.jpg (cropped into a circle) and the CV in /public/cv.pdf
@@ -16,6 +17,10 @@ const NAV = [
 
 // Position classes for the 4 floating badges around the photo
 const CHIP_CLASSES = ["ih-chip-1", "ih-chip-2", "ih-chip-3", "ih-chip-4"];
+
+// site.intro: "classic" = text on the left, round photo on the right
+//             "mixed"   = same page, with the giant word + cut-out photo in the middle
+const MIXED = site.intro === "mixed";
 
 export default function IntroHero() {
   const [photoOk, setPhotoOk] = useState(true);
@@ -51,8 +56,62 @@ export default function IntroHero() {
   const ticker = [...site.ticker, ...site.ticker];
   const closeMenu = () => setMenuOpen(false);
 
+  // Own colors for the mixed mode (site.poster.themed = true):
+  // bg = background, ink = text, word = giant word, accent / accentInk = main button
+  const p = site.poster || {};
+  const dark = MIXED && p.themed;
+  const sectionStyle = dark
+    ? {
+        "--dk-bg": p.bg,
+        "--dk-ink": p.ink,
+        "--dk-word": p.wordColor || p.ink,
+        "--dk-accent": p.accent || p.ink,
+        "--dk-accent-ink": p.accentInk || p.bg,
+      }
+    : undefined;
+
+  const status = (
+    <p className="ih-status">
+      <span className="ih-dot" aria-hidden="true" />
+      {site.status}
+    </p>
+  );
+
+  const role = (
+    <p className="ih-role">
+      {site.rolePrefix}{" "}
+      <span className={`ih-word ${wordVisible ? "is-visible" : ""}`} aria-live="polite">
+        {site.rotating[wordIndex]}
+      </span>
+      <br />
+      {site.roleLine}
+    </p>
+  );
+
+  const actions = (
+    <div className="ih-actions">
+      <a href="#projects" className="ih-btn ih-btn-primary">
+        View my work <ArrowRight size={18} />
+      </a>
+      <a href={CV_FILE} download className="ih-btn ih-btn-outline">
+        Download CV <Download size={18} />
+      </a>
+    </div>
+  );
+
+  const chips = site.chips.slice(0, 4).map(({ label, icon: Icon }, i) => (
+    <span key={label} className={`ih-chip ${CHIP_CLASSES[i]}`}>
+      <Icon size={18} aria-hidden="true" />
+      {label}
+    </span>
+  ));
+
   return (
-    <section className="ih-section" id="intro">
+    <section
+      className={`ih-section ${MIXED ? "is-mixed" : ""} ${dark ? "is-themed" : ""}`}
+      id="intro"
+      style={sectionStyle}
+    >
       <div className="ih-glow ih-glow-a" aria-hidden="true" />
       <div className="ih-glow ih-glow-b" aria-hidden="true" />
 
@@ -98,66 +157,56 @@ export default function IntroHero() {
         </div>
       </header>
 
-      <div className="ih-inner">
-        {/* Text */}
-        <div className="ih-text">
-          <p className="ih-status">
-            <span className="ih-dot" aria-hidden="true" />
-            {site.status}
-          </p>
-
-          <h1 className="ih-title">
-            Hi, I’m
-            <br />
-            <span className="ih-name">{site.displayName}</span>.
-          </h1>
-
-          <p className="ih-role">
-            {site.rolePrefix}{" "}
-            <span className={`ih-word ${wordVisible ? "is-visible" : ""}`} aria-live="polite">
-              {site.rotating[wordIndex]}
-            </span>
-            <br />
-            {site.roleLine}
-          </p>
-
-          <div className="ih-actions">
-            <a href="#projects" className="ih-btn ih-btn-primary">
-              View my work <ArrowRight size={18} />
-            </a>
-            <a href={CV_FILE} download className="ih-btn ih-btn-outline">
-              Download CV <Download size={18} />
-            </a>
+      {MIXED ? (
+        /* Giant word + photo in the middle, text and buttons under it */
+        <div className="ih-inner ih-inner-mixed">
+          {status}
+          <PosterStage>
+            <div className="ih-chips-layer">{chips}</div>
+          </PosterStage>
+          <div className="ih-under">
+            {role}
+            {actions}
           </div>
         </div>
+      ) : (
+        <div className="ih-inner">
+          {/* Text */}
+          <div className="ih-text">
+            {status}
 
-        {/* Photo (shown first on phones) */}
-        <div className="ih-visual">
-          <div className="ih-orbit" aria-hidden="true" />
-          <div className="ih-circle">
-            {photoOk ? (
-              <img
-                src={PHOTO}
-                alt={site.fullName}
-                onError={() => setPhotoOk(false)}
-                draggable="false"
-              />
-            ) : (
-              <div className="ih-placeholder">
-                <UserRound size={44} />
-                <span>Add /public/me.jpg</span>
-              </div>
-            )}
+            <h1 className="ih-title">
+              Hi, I’m
+              <br />
+              <span className="ih-name">{site.displayName}</span>.
+            </h1>
+
+            {role}
+            {actions}
           </div>
 
-          {site.chips.slice(0, 4).map(({ label, icon: Icon }, i) => (
-            <span key={label} className={`ih-chip ${CHIP_CLASSES[i]}`}>
-              <Icon size={18} aria-hidden="true" />
-              {label}
-            </span>
-          ))}
+          {/* Photo (shown first on phones) */}
+          <div className="ih-visual">
+            <div className="ih-orbit" aria-hidden="true" />
+            <div className="ih-circle">
+              {photoOk ? (
+                <img
+                  src={PHOTO}
+                  alt={site.fullName}
+                  onError={() => setPhotoOk(false)}
+                  draggable="false"
+                />
+              ) : (
+                <div className="ih-placeholder">
+                  <UserRound size={44} />
+                  <span>Add /public/me.jpg</span>
+                </div>
+              )}
+            </div>
+            {chips}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Hook at the bottom of the first screen */}
       <div className="ih-bottom">
